@@ -72,10 +72,10 @@ func main() {
 		dataCovid := callCovidData()
 		switch message {
 		case "CASES TOTAL":
-			finalMessage = fmt.Sprintf("Total Active Cases in World=  %s", humanize.Comma(dataCovid.Global.TotalConfirmed))
+			finalMessage = fmt.Sprintf("Total Active Cases in World %s", humanize.Comma(dataCovid.Global.TotalConfirmed))
 			break
 		case "DEATHS TOTAL":
-			finalMessage = fmt.Sprintf("Total Death Cases in World  %s", humanize.Comma(dataCovid.Global.TotalDeaths))
+			finalMessage = fmt.Sprintf("Total Death Cases in World %s", humanize.Comma(dataCovid.Global.TotalDeaths))
 			break
 		default:
 			finalMessage = otherCommand(message, dataCovid)
