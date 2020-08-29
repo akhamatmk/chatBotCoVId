@@ -1,13 +1,9 @@
 package main
 
 import (
-    "fmt"
+	"fmt"
 )
 
-type point struct {
-    x, y int
-}
-
 func main() {
-    fmt.Printf("init new project")
+	fmt.Printf("init new project sadsa")
 }
