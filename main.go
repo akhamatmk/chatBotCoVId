@@ -90,7 +90,7 @@ func main() {
 func otherCommand(cmd string, data ResponseDataCovid) string {
 	str := strings.Split(cmd, " ")
 	if len(str) == 1 {
-		return ""
+		return "Perintah Orak Ana Jancuk"
 	}
 
 	finalMessage := ""
