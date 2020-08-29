@@ -2,32 +2,29 @@ package main
 
 import (
 	"log"
-	"net/http"
-	"os"
+	"time"
 
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
+	tb "gopkg.in/tucnak/telebot.v2"
 )
 
 func main() {
-	port := os.Getenv("PORT")
+	b, err := tb.NewBot(tb.Settings{
+		// You can also set custom API URL.
+		// If field is empty it equals to "https://api.telegram.org".
+		URL: "https://covidbott.herokuapp.com",
 
-	if port == "" {
-		log.Fatal("$PORT must be set")
+		Token:  "1156867509:AAHf8zx2m0BgprX1yqCDOTypvWJ7AxC7h8M",
+		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
+	})
+
+	if err != nil {
+		log.Fatal(err)
+		return
 	}
 
-	router := gin.New()
-	router.Use(gin.Logger())
-	router.LoadHTMLGlob("templates/*.tmpl.html")
-	router.Static("/static", "static")
-
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	b.Handle("/hello", func(m *tb.Message) {
+		b.Send(m.Sender, "Hello World!")
 	})
 
-	router.GET("/ping", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
-
-	router.Run(":" + port)
+	b.Start()
 }
