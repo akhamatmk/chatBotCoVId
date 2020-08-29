@@ -33,5 +33,9 @@ func main() {
 		b.Send(m.Sender, "Hi!")
 	})
 
+	b.Handle(tb.OnText, func(m *tb.Message) {
+		b.Send(m.Sender, m.Text)
+	})
+
 	b.Start()
 }
