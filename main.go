@@ -99,7 +99,7 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 
 		for i := 0; i < len(data.Countries); i++ {
 			if data.Countries[i].CountryCode == strings.ToUpper(str[1]) {
-				finalMessage = fmt.Sprintf("IN Active Cases =  %s", humanize.Comma(data.Countries[i].TotalConfirmed))
+				finalMessage = fmt.Sprintf("Total case in %s =  %s", data.Countries[i].Country, humanize.Comma(data.Countries[i].TotalConfirmed))
 				break
 			}
 		}
@@ -108,14 +108,14 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 	case "DEATHS":
 		for i := 0; i < len(data.Countries); i++ {
 			if data.Countries[i].CountryCode == strings.ToUpper(str[1]) {
-				finalMessage = fmt.Sprintf("IN Active Cases =  %s", humanize.Comma(data.Countries[i].TotalDeaths))
+				finalMessage = fmt.Sprintf("In death in %s =  %s", data.Countries[i].Country, humanize.Comma(data.Countries[i].TotalDeaths))
 				break
 			}
 		}
 
 		break
 	default:
-		finalMessage = "Command NOt Found"
+		finalMessage = "Perintah Orak Ana Jancuk"
 	}
 
 	return finalMessage
