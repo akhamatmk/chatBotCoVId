@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/dustin/go-humanize"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -71,13 +72,13 @@ func main() {
 		dataCovid := callCovidData()
 		switch message {
 		case "CASES TOTAL":
-			finalMessage = fmt.Sprintf("Total Active Cases =  %d", dataCovid.Global.TotalConfirmed)
+			finalMessage = fmt.Sprintf("Total Active Cases =  %s", humanize.Comma(dataCovid.Global.TotalConfirmed))
 			break
 		case "DEATHS TOTAL":
-			finalMessage = fmt.Sprintf("Total Active Cases =  %d", dataCovid.Global.TotalDeaths)
+			finalMessage = fmt.Sprintf("Total Death Cases =  %s", humanize.Comma(dataCovid.Global.TotalDeaths))
 			break
 		default:
-			finalMessage = ""
+			finalMessage = otherCommand(message, dataCovid)
 		}
 
 		b.Send(m.Sender, finalMessage)
@@ -98,7 +99,7 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 
 		for i := 0; i < len(data.Countries); i++ {
 			if data.Countries[i].CountryCode == strings.ToUpper(str[1]) {
-				finalMessage = fmt.Sprintf("IN Active Cases =  %d", data.Countries[i].TotalConfirmed)
+				finalMessage = fmt.Sprintf("IN Active Cases =  %s", humanize.Comma(data.Countries[i].TotalConfirmed))
 				break
 			}
 		}
@@ -107,7 +108,7 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 	case "DEATHS":
 		for i := 0; i < len(data.Countries); i++ {
 			if data.Countries[i].CountryCode == strings.ToUpper(str[1]) {
-				finalMessage = fmt.Sprintf("IN Active Cases =  %d", data.Countries[i].TotalDeaths)
+				finalMessage = fmt.Sprintf("IN Active Cases =  %s", humanize.Comma(data.Countries[i].TotalDeaths))
 				break
 			}
 		}
