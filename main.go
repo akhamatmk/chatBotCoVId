@@ -10,8 +10,7 @@ import (
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	port = "8080"
+	port := os.Getenv("STRONGEST_AVENGER")
 	if port == "" {
 		log.Fatal("$PORT must be set")
 	}
@@ -23,12 +22,6 @@ func main() {
 
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
-
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
 	})
 
 	router.Run(":" + port)
