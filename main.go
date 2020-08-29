@@ -1,17 +1,49 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
+	"strings"
 
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
+type global struct {
+	NewConfirmed   int64
+	TotalConfirmed int64
+	NewDeaths      int64
+	TotalDeaths    int64
+	NewRecovered   int64
+	TotalRecovered int64
+}
+
+type countrie struct {
+	Country        string
+	CountryCode    string
+	Slug           string
+	NewConfirmed   int64
+	TotalConfirmed int64
+	NewDeaths      int64
+	TotalDeaths    int64
+	NewRecovered   int64
+	TotalRecovered int64
+}
+
+type ResponseDataCovid struct {
+	Global    global
+	Countries []countrie
+}
+
 func main() {
+
 	var (
 		port      = os.Getenv("PORT")
-		publicURL = os.Getenv("PUBLIC_URL") // you must add it to your config vars
-		token     = os.Getenv("TOKEN")      // you must add it to your config vars
+		publicURL = os.Getenv("PUBLIC_URL")
+		token     = os.Getenv("TOKEN")
 	)
 
 	webhook := &tb.Webhook{
@@ -34,8 +66,85 @@ func main() {
 	})
 
 	b.Handle(tb.OnText, func(m *tb.Message) {
-		b.Send(m.Sender, m.Text)
+		finalMessage := ""
+		message := strings.ToUpper(m.Text)
+		dataCovid := callCovidData()
+		switch message {
+		case "CASES TOTAL":
+			finalMessage = fmt.Sprintf("Total Active Cases =  %d", dataCovid.Global.TotalConfirmed)
+			break
+		case "DEATHS TOTAL":
+			finalMessage = fmt.Sprintf("Total Active Cases =  %d", dataCovid.Global.TotalDeaths)
+			break
+		default:
+			finalMessage = ""
+		}
+
+		b.Send(m.Sender, finalMessage)
 	})
 
 	b.Start()
+}
+
+func otherCommand(cmd string, data ResponseDataCovid) string {
+	str := strings.Split(cmd, " ")
+	if len(str) == 1 {
+		return ""
+	}
+
+	finalMessage := ""
+	switch str[0] {
+	case "CASES":
+
+		for i := 0; i < len(data.Countries); i++ {
+			if data.Countries[i].CountryCode == strings.ToUpper(str[1]) {
+				finalMessage = fmt.Sprintf("IN Active Cases =  %d", data.Countries[i].TotalConfirmed)
+				break
+			}
+		}
+
+		break
+	case "DEATHS":
+		for i := 0; i < len(data.Countries); i++ {
+			if data.Countries[i].CountryCode == == strings.ToUpper(str[1]) {
+				finalMessage = fmt.Sprintf("IN Active Cases =  %d", data.Countries[i].TotalDeaths)
+				break
+			}
+		}
+
+		break
+	default:
+		finalMessage = "Command NOt Found"
+	}
+
+	return finalMessage
+}
+
+func callCovidData() ResponseDataCovid {
+	data := ResponseDataCovid{}
+	url := "https://api.covid19api.com/summary"
+	method := "GET"
+
+	client := &http.Client{}
+	req, err := http.NewRequest(method, url, nil)
+	if err != nil {
+		fmt.Println(err)
+		return data
+	}
+	res, err := client.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		return data
+	}
+
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		fmt.Println(err)
+		return data
+	}
+
+	_ = json.Unmarshal(body, &data)
+
+	return data
 }
