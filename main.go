@@ -106,7 +106,7 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 		break
 	case "DEATHS":
 		for i := 0; i < len(data.Countries); i++ {
-			if data.Countries[i].CountryCode == == strings.ToUpper(str[1]) {
+			if data.Countries[i].CountryCode == strings.ToUpper(str[1]) {
 				finalMessage = fmt.Sprintf("IN Active Cases =  %d", data.Countries[i].TotalDeaths)
 				break
 			}
