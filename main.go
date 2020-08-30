@@ -104,7 +104,9 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 			}
 		}
 
-		finalMessage = fmt.Sprintf("Data not found")
+		if finalMessage == "" {
+			finalMessage = fmt.Sprintf("Data not found")
+		}
 
 		break
 	case "DEATHS":
@@ -115,11 +117,13 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 			}
 		}
 
-		finalMessage = fmt.Sprintf("Data not found")
+		if finalMessage == "" {
+			finalMessage = fmt.Sprintf("Data not found")
+		}
 
 		break
 	default:
-		finalMessage = "Perintah Orak Ana Jancuk"
+		finalMessage = "Data not found"
 	}
 
 	return finalMessage
