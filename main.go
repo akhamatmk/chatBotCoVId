@@ -104,6 +104,8 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 			}
 		}
 
+		finalMessage = fmt.Sprintf("Data not found")
+
 		break
 	case "DEATHS":
 		for i := 0; i < len(data.Countries); i++ {
@@ -112,6 +114,8 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 				break
 			}
 		}
+
+		finalMessage = fmt.Sprintf("Data not found")
 
 		break
 	default:
