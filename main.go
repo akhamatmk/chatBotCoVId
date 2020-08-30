@@ -90,7 +90,7 @@ func main() {
 func otherCommand(cmd string, data ResponseDataCovid) string {
 	str := strings.Split(cmd, " ")
 	if len(str) == 1 {
-		return "Perintah Orak Ana Jancuk"
+		return "Command not found"
 	}
 
 	finalMessage := ""
@@ -123,7 +123,7 @@ func otherCommand(cmd string, data ResponseDataCovid) string {
 
 		break
 	default:
-		finalMessage = "Data not found"
+		finalMessage = "Command not found"
 	}
 
 	return finalMessage
